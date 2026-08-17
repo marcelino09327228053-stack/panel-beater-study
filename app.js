@@ -1,193 +1,22 @@
-const defaultParts = [
-  { id: crypto.randomUUID(), name: "Fender", image: "", youtube: "", notes: "" },
-  { id: crypto.randomUUID(), name: "Hood", image: "", youtube: "", notes: "" },
-  { id: crypto.randomUUID(), name: "Door Panel", image: "", youtube: "", notes: "" },
-  { id: crypto.randomUUID(), name: "Quarter Panel", image: "", youtube: "", notes: "" },
-  { id: crypto.randomUUID(), name: "Rocker Panel", image: "", youtube: "", notes: "" },
-  { id: crypto.randomUUID(), name: "Bumper", image: "", youtube: "", notes: "" },
-  { id: crypto.randomUUID(), name: "Radiator Support", image: "", youtube: "", notes: "" }
-];
-
-const STORAGE_KEY = "panel_beater_study_parts_v1";
-let parts = loadParts();
-let selectedId = parts[0]?.id || null;
-
-const partsList = document.getElementById("partsList");
-const searchInput = document.getElementById("searchInput");
-const addBtn = document.getElementById("addBtn");
-const editBtn = document.getElementById("editBtn");
-const emptyState = document.getElementById("emptyState");
-const detailCard = document.getElementById("detailCard");
-const detailName = document.getElementById("detailName");
-const imagesBtn = document.getElementById("imagesBtn");
-const watchBtn = document.getElementById("watchBtn");
-const notesArea = document.getElementById("notesArea");
-const saveNotesBtn = document.getElementById("saveNotesBtn");
-
-const partDialog = document.getElementById("partDialog");
-const partForm = document.getElementById("partForm");
-const dialogTitle = document.getElementById("dialogTitle");
-const partId = document.getElementById("partId");
-const partName = document.getElementById("partName");
-const imageUrl = document.getElementById("imageUrl");
-const youtubeUrl = document.getElementById("youtubeUrl");
-const partNotes = document.getElementById("partNotes");
-const closeDialogBtn = document.getElementById("closeDialogBtn");
-const deleteBtn = document.getElementById("deleteBtn");
-
-function loadParts() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultParts));
-    return defaultParts;
-  }
-  try { return JSON.parse(saved); } catch { return defaultParts; }
-}
-
-function saveParts() { localStorage.setItem(STORAGE_KEY, JSON.stringify(parts)); }
-
-function renderParts(filter = "") {
-  const q = filter.trim().toLowerCase();
-  const filtered = parts.filter(p => p.name.toLowerCase().includes(q));
-  partsList.innerHTML = "";
-
-  filtered.forEach(part => {
-    const row = document.createElement("div");
-    row.className = "part-item" + (part.id === selectedId ? " active" : "");
-    row.innerHTML = `
-      <button class="part-main" type="button">
-        <div class="link-icon">🔗</div>
-        <div class="part-text">
-          <div class="part-name">${escapeHtml(part.name)}</div>
-          <div class="part-sub">${part.image ? "🖼 View Images" : "Add image link"} · ${part.youtube ? "▶ Video" : "Add video"}</div>
-        </div>
-      </button>
-      <button class="sidebar-edit" type="button" title="Edit ${escapeHtml(part.name)}">✎</button>`;
-
-    row.querySelector(".part-main").addEventListener("click", () => {
-      selectedId = part.id;
-      renderParts(searchInput.value);
-      renderDetail();
-      if (window.innerWidth <= 760) document.querySelector(".content").scrollIntoView({ behavior: "smooth" });
-    });
-
-    row.querySelector(".sidebar-edit").addEventListener("click", e => {
-      e.stopPropagation();
-      selectedId = part.id;
-      renderParts(searchInput.value);
-      renderDetail();
-      openEditDialog();
-    });
-    partsList.appendChild(row);
-  });
-}
-
-function setLinkButton(button, url, readyText, emptyText) {
-  if (url) {
-    button.href = normalizeWebUrl(url);
-    button.textContent = readyText;
-    button.style.pointerEvents = "auto";
-    button.style.opacity = "1";
-  } else {
-    button.removeAttribute("href");
-    button.textContent = emptyText;
-    button.style.pointerEvents = "none";
-    button.style.opacity = ".5";
-  }
-}
-
-function renderDetail() {
-  const part = parts.find(p => p.id === selectedId);
-  if (!part) {
-    emptyState.classList.remove("hidden");
-    detailCard.classList.add("hidden");
-    return;
-  }
-  emptyState.classList.add("hidden");
-  detailCard.classList.remove("hidden");
-  detailName.textContent = part.name;
-  notesArea.value = part.notes || "";
-  setLinkButton(imagesBtn, part.image, "🖼 View Images", "No Image Link Yet");
-  setLinkButton(watchBtn, part.youtube, "▶ Watch Video", "No Video Link Yet");
-}
-
-function openAddDialog() {
-  dialogTitle.textContent = "Add New Part";
-  partId.value = "";
-  partName.value = "";
-  imageUrl.value = "";
-  youtubeUrl.value = "";
-  partNotes.value = "";
-  deleteBtn.classList.add("hidden");
-  partDialog.showModal();
-}
-
-function openEditDialog() {
-  const part = parts.find(p => p.id === selectedId);
-  if (!part) return;
-  dialogTitle.textContent = "Edit Part";
-  partId.value = part.id;
-  partName.value = part.name;
-  imageUrl.value = part.image || "";
-  youtubeUrl.value = part.youtube || "";
-  partNotes.value = part.notes || "";
-  deleteBtn.classList.remove("hidden");
-  partDialog.showModal();
-}
-
-partForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const id = partId.value;
-  const data = {
-    id: id || crypto.randomUUID(),
-    name: partName.value.trim(),
-    image: normalizeWebUrl(imageUrl.value.trim()),
-    youtube: normalizeWebUrl(youtubeUrl.value.trim()),
-    notes: partNotes.value.trim()
-  };
-  if (!data.name) return;
-  if (id) parts = parts.map(p => p.id === id ? data : p);
-  else { parts.push(data); selectedId = data.id; }
-  saveParts();
-  renderParts(searchInput.value);
-  renderDetail();
-  partDialog.close();
-});
-
-saveNotesBtn.addEventListener("click", () => {
-  const part = parts.find(p => p.id === selectedId);
-  if (!part) return;
-  part.notes = notesArea.value;
-  saveParts();
-  saveNotesBtn.textContent = "Saved ✓";
-  setTimeout(() => saveNotesBtn.textContent = "Save Notes", 1200);
-});
-
-deleteBtn.addEventListener("click", () => {
-  const id = partId.value;
-  if (!id) return;
-  parts = parts.filter(p => p.id !== id);
-  selectedId = parts[0]?.id || null;
-  saveParts();
-  partDialog.close();
-  renderParts(searchInput.value);
-  renderDetail();
-});
-
-addBtn.addEventListener("click", openAddDialog);
-editBtn.addEventListener("click", openEditDialog);
-closeDialogBtn.addEventListener("click", () => partDialog.close());
-searchInput.addEventListener("input", e => renderParts(e.target.value));
-
-function normalizeWebUrl(url) {
-  if (!url) return "";
-  if (/^https?:\/\//i.test(url)) return url;
-  return "https://" + url;
-}
-
-function escapeHtml(value) {
-  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-}
-
-renderParts();
-renderDetail();
+const defaultParts=["Fender","Hood","Door Panel","Quarter Panel","Rocker Panel","Bumper","Radiator Support"].map(name=>({id:crypto.randomUUID(),name,image:"",youtube:"",notes:""}));
+const STORAGE_KEY="panel_beater_study_parts_v1";
+let parts=loadParts(),selectedId=parts[0]?.id||null;
+const $=id=>document.getElementById(id);
+const partsList=$("partsList"),searchInput=$("searchInput"),addBtn=$("addBtn"),emptyState=$("emptyState"),detailCard=$("detailCard"),detailName=$("detailName"),mainPartName=$("mainPartName"),mainImageUrl=$("mainImageUrl"),imagesBtn=$("imagesBtn"),mainYoutubeUrl=$("mainYoutubeUrl"),videoPreview=$("videoPreview"),videoThumb=$("videoThumb"),watchBtn=$("watchBtn"),notesArea=$("notesArea"),saveChangesBtn=$("saveChangesBtn"),deletePartBtn=$("deletePartBtn");
+function loadParts(){const s=localStorage.getItem(STORAGE_KEY);if(!s){localStorage.setItem(STORAGE_KEY,JSON.stringify(defaultParts));return defaultParts}try{return JSON.parse(s)}catch{return defaultParts}}
+function saveParts(){localStorage.setItem(STORAGE_KEY,JSON.stringify(parts))}
+function esc(v){return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function url(v){v=v.trim();if(!v)return"";return /^https?:\/\//i.test(v)?v:"https://"+v}
+function youtubeId(v){try{const u=new URL(url(v));if(u.hostname.includes("youtu.be"))return u.pathname.split("/")[1]?.split("?")[0]||"";if(u.hostname.includes("youtube.com")){if(u.pathname==="/watch")return u.searchParams.get("v")||"";const m=u.pathname.match(/\/(?:shorts|embed|live)\/([^/?]+)/);return m?m[1]:""}}catch{}return""}
+function setLink(el,v,on,off){if(v){el.href=url(v);el.textContent=on;el.classList.remove("disabled")}else{el.removeAttribute("href");el.textContent=off;el.classList.add("disabled")}}
+function renderParts(filter=""){const q=filter.trim().toLowerCase();partsList.innerHTML="";parts.filter(p=>p.name.toLowerCase().includes(q)).forEach(p=>{const row=document.createElement("button");row.type="button";row.className="part-item"+(p.id===selectedId?" active":"");row.innerHTML=`<div class="link-icon">🔗</div><div class="part-text"><div class="part-name">${esc(p.name)}</div><div class="part-sub">${p.image?"🖼 Images":"Add image link"} · ${p.youtube?"▶ Video":"Add video"}</div></div>`;row.onclick=()=>{selectedId=p.id;renderParts(searchInput.value);renderDetail();if(innerWidth<=760)document.querySelector(".content").scrollIntoView({behavior:"smooth"})};partsList.appendChild(row)})}
+function renderDetail(){const p=parts.find(x=>x.id===selectedId);if(!p){emptyState.classList.remove("hidden");detailCard.classList.add("hidden");return}emptyState.classList.add("hidden");detailCard.classList.remove("hidden");detailName.textContent=p.name;mainPartName.value=p.name;mainImageUrl.value=p.image||"";mainYoutubeUrl.value=p.youtube||"";notesArea.value=p.notes||"";setLink(imagesBtn,p.image,"🖼 View Images","No Image Link Yet");setLink(watchBtn,p.youtube,"▶ Watch Video","No Video Link Yet");renderVideoPreview(p.youtube)}
+function renderVideoPreview(v){const id=youtubeId(v||"");if(!id){videoPreview.classList.add("hidden");videoThumb.removeAttribute("src");return}videoThumb.src=`https://img.youtube.com/vi/${id}/hqdefault.jpg`;videoPreview.classList.remove("hidden");videoPreview.onclick=()=>window.open(url(v),"_blank","noopener,noreferrer")}
+function saveCurrent(){const p=parts.find(x=>x.id===selectedId);if(!p)return;p.name=mainPartName.value.trim()||p.name;p.image=url(mainImageUrl.value);p.youtube=url(mainYoutubeUrl.value);p.notes=notesArea.value;saveParts();renderParts(searchInput.value);renderDetail();saveChangesBtn.textContent="Saved ✓";setTimeout(()=>saveChangesBtn.textContent="💾 Save Changes",1200)}
+saveChangesBtn.onclick=saveCurrent;
+addBtn.onclick=()=>{const p={id:crypto.randomUUID(),name:"New Part",image:"",youtube:"",notes:""};parts.push(p);selectedId=p.id;saveParts();renderParts(searchInput.value);renderDetail();mainPartName.focus();mainPartName.select()};
+deletePartBtn.onclick=()=>{const p=parts.find(x=>x.id===selectedId);if(!p)return;if(!confirm(`Delete ${p.name}?`))return;parts=parts.filter(x=>x.id!==selectedId);selectedId=parts[0]?.id||null;saveParts();renderParts(searchInput.value);renderDetail()};
+searchInput.oninput=e=>renderParts(e.target.value);
+mainImageUrl.oninput=()=>setLink(imagesBtn,mainImageUrl.value,"🖼 View Images","No Image Link Yet");
+mainYoutubeUrl.oninput=()=>{setLink(watchBtn,mainYoutubeUrl.value,"▶ Watch Video","No Video Link Yet");renderVideoPreview(mainYoutubeUrl.value)};
+renderParts();renderDetail();
