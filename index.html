@@ -28,16 +28,16 @@
       </div>
 
       <article id="detailCard" class="detail-card hidden">
-        <img id="detailImage" class="detail-image" alt="Part image" />
         <div class="detail-body">
           <div class="detail-head">
             <h2 id="detailName"></h2>
             <button id="editBtn" class="ghost">Edit</button>
           </div>
 
-          <a id="watchBtn" class="watch-btn" target="_blank" rel="noopener noreferrer">
-            ▶ Watch Video
-          </a>
+          <div class="action-row">
+            <a id="imagesBtn" class="images-btn" target="_blank" rel="noopener noreferrer">🖼 View Images</a>
+            <a id="watchBtn" class="watch-btn" target="_blank" rel="noopener noreferrer">▶ Watch Video</a>
+          </div>
 
           <label for="notesArea">Notes</label>
           <textarea id="notesArea" rows="8" placeholder="Write your study notes here..."></textarea>
@@ -59,18 +59,8 @@
       <label for="partName">Part Name</label>
       <input id="partName" required placeholder="e.g. Fender" />
 
-      <label for="imageUrl">Image URL</label>
-      <input id="imageUrl" placeholder="Paste direct image link here" />
-
-      <div class="or-divider">or</div>
-
-      <label for="imageFile">Upload Image</label>
-      <input id="imageFile" type="file" accept="image/*" />
-
-      <div class="image-preview-wrap">
-        <span>Preview</span>
-        <img id="imagePreview" class="image-preview" alt="Image preview" />
-      </div>
+      <label for="imageUrl">Image Website Link</label>
+      <input id="imageUrl" placeholder="Paste Google Images or any website link" />
 
       <label for="youtubeUrl">YouTube Link</label>
       <input id="youtubeUrl" placeholder="https://youtube.com/..." />
