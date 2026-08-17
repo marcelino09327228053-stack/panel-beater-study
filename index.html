@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Beater Study</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Panel Beater Study</h1>
+      <p>Car Body Parts</p>
+    </div>
+    <button id="addBtn" class="primary">+ Add New Part</button>
+  </header>
+
+  <main class="app-shell">
+    <aside class="sidebar">
+      <input id="searchInput" class="search" type="search" placeholder="Search part..." />
+      <div id="partsList" class="parts-list"></div>
+    </aside>
+
+    <section class="content">
+      <div id="emptyState" class="empty-state">
+        <h2>Select a part</h2>
+        <p>Choose a car body part from the list.</p>
+      </div>
+
+      <article id="detailCard" class="detail-card hidden">
+        <img id="detailImage" class="detail-image" alt="Part image" />
+        <div class="detail-body">
+          <div class="detail-head">
+            <h2 id="detailName"></h2>
+            <button id="editBtn" class="ghost">Edit</button>
+          </div>
+
+          <a id="watchBtn" class="watch-btn" target="_blank" rel="noopener noreferrer">
+            ▶ Watch Video
+          </a>
+
+          <label for="notesArea">Notes</label>
+          <textarea id="notesArea" rows="8" placeholder="Write your study notes here..."></textarea>
+          <button id="saveNotesBtn" class="primary full">Save Notes</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <dialog id="partDialog">
+    <form id="partForm" method="dialog">
+      <div class="dialog-head">
+        <h2 id="dialogTitle">Add New Part</h2>
+        <button type="button" id="closeDialogBtn" class="icon-btn">✕</button>
+      </div>
+
+      <input type="hidden" id="partId" />
+
+      <label for="partName">Part Name</label>
+      <input id="partName" required placeholder="e.g. Fender" />
+
+      <label for="imageUrl">Image URL</label>
+      <input id="imageUrl" placeholder="Paste direct image link here" />
+
+      <div class="or-divider">or</div>
+
+      <label for="imageFile">Upload Image</label>
+      <input id="imageFile" type="file" accept="image/*" />
+
+      <div class="image-preview-wrap">
+        <span>Preview</span>
+        <img id="imagePreview" class="image-preview" alt="Image preview" />
+      </div>
+
+      <label for="youtubeUrl">YouTube Link</label>
+      <input id="youtubeUrl" placeholder="https://youtube.com/..." />
+
+      <label for="partNotes">Notes</label>
+      <textarea id="partNotes" rows="5" placeholder="Optional notes..."></textarea>
+
+      <div class="dialog-actions">
+        <button type="button" id="deleteBtn" class="danger hidden">Delete</button>
+        <button type="submit" class="primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
