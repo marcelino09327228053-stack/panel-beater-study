@@ -1,22 +1,96 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel Beater Study</title><link rel="stylesheet" href="style.css"></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MB Future Tech | Panel Beater Training Hub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
-<header class="topbar"><div><h1>Panel Beater Study</h1><p>Car Body Parts</p></div><button id="addBtn" class="primary">+ Add New Part</button></header>
-<main class="app-shell">
-<aside class="sidebar"><input id="searchInput" class="search" type="search" placeholder="Search part..."><div id="partsList" class="parts-list"></div></aside>
-<section class="content">
-<div id="emptyState" class="empty-state"><h2>Select a part</h2><p>Choose a car body part from the list.</p></div>
-<article id="detailCard" class="detail-card hidden"><div class="detail-body">
-<h2 id="detailName"></h2>
-<label for="mainPartName">Part Name</label><input id="mainPartName" placeholder="Part name">
-<label for="mainImageUrl">Image Website Link</label><input id="mainImageUrl" placeholder="Paste your image link here">
-<a id="imagesBtn" class="images-btn link-button" target="_blank" rel="noopener noreferrer">🖼 View Images</a>
-<label for="mainYoutubeUrl">YouTube Link</label><input id="mainYoutubeUrl" placeholder="Paste your YouTube link here">
-<div id="videoPreview" class="video-preview hidden"><img id="videoThumb" alt="YouTube video preview"><span>▶</span></div>
-<a id="watchBtn" class="watch-btn link-button" target="_blank" rel="noopener noreferrer">▶ Watch Video</a>
-<label for="notesArea">Notes</label><textarea id="notesArea" rows="7" placeholder="Write your study notes here..."></textarea>
-<button id="saveChangesBtn" class="primary full">💾 Save Changes</button>
-<button id="deletePartBtn" class="danger full danger-space">Delete Part</button>
-</div></article>
-</section></main>
-<script src="app.js"></script></body></html>
+  <div class="app-bg"></div>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-mark">MB</div>
+      <div>
+        <div class="brand-title">MB <span>FUTURE TECH</span></div>
+        <div class="brand-subtitle">PANEL BEATER TRAINING HUB</div>
+      </div>
+    </div>
+    <button id="addBtn" class="primary add-top">＋ ADD NEW PART</button>
+  </header>
+
+  <main class="dashboard">
+    <aside class="sidebar glass-card">
+      <input id="searchInput" class="search" type="search" placeholder="Search parts..." />
+      <div class="section-label">CAR BODY PARTS</div>
+      <div id="partsList" class="parts-list"></div>
+      <div class="brand-panel">
+        <div class="brand-mini">MB FUTURE TECH</div>
+        <small>BUILD SKILLS. SHAPE FUTURES.</small>
+      </div>
+    </aside>
+
+    <section class="main-area">
+      <div class="stats-row">
+        <div class="stat-card"><span class="stat-icon">✦</span><div><small>TOTAL PARTS</small><strong id="statParts">0</strong><span>Parts Added</span></div></div>
+        <div class="stat-card"><span class="stat-icon purple">▶</span><div><small>VIDEO LESSONS</small><strong id="statVideos">0</strong><span>With Videos</span></div></div>
+        <div class="stat-card"><span class="stat-icon green">▧</span><div><small>IMAGE REFERENCES</small><strong id="statImages">0</strong><span>Links Added</span></div></div>
+        <div class="stat-card"><span class="stat-icon cyan">▤</span><div><small>NOTES ADDED</small><strong id="statNotes">0</strong><span>Study Notes</span></div></div>
+      </div>
+
+      <div id="emptyState" class="empty-state glass-card">
+        <h2>Select a part</h2>
+        <p>Choose a car body part from the left panel.</p>
+      </div>
+
+      <article id="detailCard" class="detail-card glass-card hidden">
+        <div class="detail-headline">
+          <div>
+            <div class="eyebrow">SELECTED PART</div>
+            <h1 id="detailName">Fender</h1>
+            <p>Study and manage your references for this body part.</p>
+          </div>
+          <div class="part-badge">MB TRAINING</div>
+        </div>
+
+        <div class="editor-grid">
+          <section class="form-column">
+            <label for="mainPartName">PART NAME</label>
+            <input id="mainPartName" placeholder="Part name" />
+
+            <label for="mainImageUrl">IMAGE WEBSITE LINK</label>
+            <input id="mainImageUrl" placeholder="Paste your image link here" />
+            <a id="imagesBtn" class="action-btn blue" target="_blank" rel="noopener noreferrer">▧ VIEW IMAGES</a>
+
+            <label for="mainYoutubeUrl">YOUTUBE LINK</label>
+            <input id="mainYoutubeUrl" placeholder="Paste your YouTube link here" />
+            <a id="watchBtn" class="action-btn outline" target="_blank" rel="noopener noreferrer">▶ WATCH VIDEO</a>
+          </section>
+
+          <section class="preview-column">
+            <div class="preview-title">VIDEO PREVIEW</div>
+            <div id="videoPreview" class="video-preview hidden">
+              <img id="videoThumb" alt="YouTube video preview" />
+              <span>▶</span>
+            </div>
+            <div id="noPreview" class="no-preview">Paste a YouTube link to show preview</div>
+          </section>
+        </div>
+
+        <section class="notes-section">
+          <label for="notesArea">NOTES</label>
+          <textarea id="notesArea" rows="6" placeholder="Write your study notes here..."></textarea>
+        </section>
+
+        <div class="bottom-actions">
+          <button id="deletePartBtn" class="danger-btn">DELETE PART</button>
+          <button id="saveChangesBtn" class="save-btn">💾 SAVE CHANGES</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>© 2026 MB Future Tech. All Rights Reserved.</footer>
+  <script src="app.js"></script>
+</body>
+</html>
