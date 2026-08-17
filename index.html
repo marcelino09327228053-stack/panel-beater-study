@@ -33,12 +33,10 @@
             <h2 id="detailName"></h2>
             <button id="editBtn" class="ghost">Edit</button>
           </div>
-
           <div class="action-row">
             <a id="imagesBtn" class="images-btn" target="_blank" rel="noopener noreferrer">🖼 View Images</a>
             <a id="watchBtn" class="watch-btn" target="_blank" rel="noopener noreferrer">▶ Watch Video</a>
           </div>
-
           <label for="notesArea">Notes</label>
           <textarea id="notesArea" rows="8" placeholder="Write your study notes here..."></textarea>
           <button id="saveNotesBtn" class="primary full">Save Notes</button>
@@ -53,28 +51,21 @@
         <h2 id="dialogTitle">Add New Part</h2>
         <button type="button" id="closeDialogBtn" class="icon-btn">✕</button>
       </div>
-
       <input type="hidden" id="partId" />
-
       <label for="partName">Part Name</label>
       <input id="partName" required placeholder="e.g. Fender" />
-
       <label for="imageUrl">Image Website Link</label>
-      <input id="imageUrl" placeholder="Paste Google Images or any website link" />
-
+      <input id="imageUrl" placeholder="Paste your image link here" />
       <label for="youtubeUrl">YouTube Link</label>
-      <input id="youtubeUrl" placeholder="https://youtube.com/..." />
-
+      <input id="youtubeUrl" placeholder="Paste your YouTube link here" />
       <label for="partNotes">Notes</label>
       <textarea id="partNotes" rows="5" placeholder="Optional notes..."></textarea>
-
       <div class="dialog-actions">
         <button type="button" id="deleteBtn" class="danger hidden">Delete</button>
         <button type="submit" class="primary">Save</button>
       </div>
     </form>
   </dialog>
-
   <script src="app.js"></script>
 </body>
 </html>
